@@ -1,7 +1,7 @@
 server:
   port: 8080
 
-# 未知dev分段配置
+# 多环境配置，通过active进行修改读取不同配置文件
 spring:
   profiles:
     active: dev
