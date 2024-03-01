@@ -1,6 +1,7 @@
 server:
   port: 8080
 
+# 未知dev分段配置
 spring:
   profiles:
     active: dev
@@ -21,6 +22,7 @@ mybatis:
     #开启驼峰命名
     map-underscore-to-camel-case: true
 
+
 logging:
   level:
     com:
@@ -29,6 +31,8 @@ logging:
         service: info
         controller: info
 
+
+# 自定义properties
 sky:
   jwt:
     # 设置jwt签名加密时使用的秘钥
