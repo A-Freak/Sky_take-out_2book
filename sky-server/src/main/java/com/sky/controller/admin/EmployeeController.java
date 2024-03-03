@@ -79,17 +79,18 @@ public class EmployeeController {
         return Result.success();
     }
 
-/**
- * 新增员工
- * @author: zjy
- * @param employeeDTO
- * @return: Result
- **/
+    /**
+     * 新增员工
+     *
+     * @param employeeDTO
+     * @author: zjy
+     * @return: Result
+     **/
     @ApiOperation("新增员工")
     @PostMapping()
-    public Result save(@RequestBody EmployeeDTO employeeDTO){
+    public Result save(@RequestBody EmployeeDTO employeeDTO) {
         // 测试线程
-        System.out.println( "当前线程的id："+Thread.currentThread().getId());
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
 
         log.info("新增员工：{}", employeeDTO);
         employeeService.save(employeeDTO);
@@ -98,16 +99,64 @@ public class EmployeeController {
 
     /**
      * 员工分页查询
-     * @author: zjy
+     *
      * @param employeePageQueryDTO
+     * @author: zjy
      * @return: Result<PageResult>
      **/
     @GetMapping("/page")
     @ApiOperation("员工分页查询")
-    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO){
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 启用禁用员工账号
+     *
+     * @param status
+     * @param id
+     * @author: zjy
+     * @return: Result
+     **/
+    // 此处并非查询语句，故不需要返回值泛型[没遵守REST风格]
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用员工账号")
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        log.info("启用禁用员工账号：{},{}", status, id);
+        employeeService.startOrStop(status, id);//后绪步骤定义
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询员工信息
+     *
+     * @param id
+     * @author: zjy
+     * @return: Result<Employee>
+     **/
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询员工信息")
+    public Result<EmployeeDTO> startOrStop(@PathVariable Long id) {
+        EmployeeDTO employeeDTO = employeeService.getById(id);
+        return Result.success(employeeDTO);
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     * @author: zjy
+     * @return: Result
+     **/
+    @PutMapping()
+    @ApiOperation("编辑员工信息")
+    public Result startOrStop(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("编辑的员工账号：{}", employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
+
 
 }

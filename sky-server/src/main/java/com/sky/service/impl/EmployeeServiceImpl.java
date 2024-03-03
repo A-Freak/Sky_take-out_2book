@@ -72,12 +72,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void save(EmployeeDTO employeeDTO) {
         // 测试线程
-        System.out.println( "当前线程的id："+Thread.currentThread().getId());
+        // System.out.println("当前线程的id：" + Thread.currentThread().getId());
 
         // 前端传入DTO 本地存储数据库的是表的对应的Entry对象
         Employee employee = new Employee();
         // spring自带的对象拷贝工具类
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         // 没有的6个属性
         // 对常量类直接进行了修改，故不需要再次进行MD5加密
@@ -95,8 +95,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 员工分页查询
-     * @author: zjy
+     *
      * @param employeePageQueryDTO
+     * @author: zjy
      * @return: PageResult
      **/
     @Override
@@ -106,7 +107,63 @@ public class EmployeeServiceImpl implements EmployeeService {
         PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
         // 2.执行分页查询【3.使用其固定类型】
         Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
-        return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 启用禁用员工账号
+     *
+     * @param status
+     * @param id
+     * @author: zjy
+     * @return: void
+     **/
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //使用了 lombok 的新注解进行链式构建
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        // 依旧使用Entry对象进行传递，扩大SQL语句的作用
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工信息
+     *
+     * @param id
+     * @author: zjy
+     * @return: Employee
+     **/
+    @Override
+    public EmployeeDTO getById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        // 本人对其前端传输改为DTO格式避免一些泄露【缺点：一些信息无法修改】
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee,employeeDTO);
+        return employeeDTO;
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     * @author: zjy
+     * @return: void
+     **/
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        // 毕竟只是修改而已不需要所有都进行替换
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        // 调用之前的广泛的SQL
+        employeeMapper.update(employee);
     }
 
 }

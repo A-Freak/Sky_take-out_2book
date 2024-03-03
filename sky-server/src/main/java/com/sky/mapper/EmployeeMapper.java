@@ -38,4 +38,21 @@ public interface EmployeeMapper {
      * @return: Page<Employee>
      **/
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+     * 根据 id修改员工账号
+     * @author: zjy
+     * @param employee
+     * @return: void
+     **/
+    void update(Employee employee);
+
+    /**
+     * 根据id查询员工信息
+     * @author: zjy
+     * @param id
+     * @return: Employee
+     **/
+    @Select("select * from employee where id = #{id}")
+    Employee getById(Long id);
 }
