@@ -22,6 +22,7 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> success(T object) {
+        // 针对内部存储data数据的泛形存储
         Result<T> result = new Result<T>();
         result.data = object;
         result.code = 1;
