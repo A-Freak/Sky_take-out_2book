@@ -83,12 +83,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 对常量类直接进行了修改，故不需要再次进行MD5加密
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
         employee.setStatus(StatusConstant.ENABLE);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
 
         // 创建人以及修改人 逆向解析用于荷载,新技术是线程传值
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        // employee.setCreateUser(BaseContext.getCurrentId());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
@@ -157,10 +157,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-
-        // 毕竟只是修改而已不需要所有都进行替换
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
 
         // 调用之前的广泛的SQL
         employeeMapper.update(employee);
