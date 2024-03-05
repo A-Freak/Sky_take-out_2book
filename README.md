@@ -89,7 +89,8 @@ create_time创建时间、create_user创建人、 update_time修改时间、upda
 此时使用的配置类OssConfiguration只是降低耦合，
 以及使用了@ConditionalOnMissingBean【类似单例模式】，用@Autowired也行
 
-新增菜品，其前端请求DTO文件包含两个表内容， 
+新增菜品，其前端请求DTO文件包含两个表内容，
+在业务层中,两个表故要开启事务进行同生共死
 第1个表插入一条数据
 【需要用到主键返回，之前讲过非动态SQL的写法：加注解@Options】，
 **此处相当是对其XML形式进行补全。**
@@ -99,3 +100,12 @@ create_time创建时间、create_user创建人、 update_time修改时间、upda
 
 
 ###### 3.4
+#######菜品分页查询:
+其响应内容包含多表，明显的左外连接【熟悉多表连接】返回data内部使用dishVO
+其余均为正常分页查询、动态SQL，if添加and 并且name模糊查询
+
+注意点：第二个表放回的属性要对应响应VO名字才会进行映射故要起别名
+【多表查询时要对重复属性添加表前缀】
+
+#######删除菜品:
+
