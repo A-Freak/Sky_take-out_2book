@@ -129,11 +129,15 @@ public class DishServiceImpl implements DishService {
 
         // 进行删除既要对菜单表dish进行【动态SQL
         // 同样要对dish_flavor进行删除
-        // 此处我将其修改为批量删除[自我修改]笨比！！
+        // 此处我将其修改为批量删除[自我修改]笨比！！【对前端而言倒数无所谓】
         // 【一般进行删除都可以，但是其他业务层中进行调用不会删除多个】
-        dishMapper.deleteByIds(ids);
-        dishFlavorMapper.deleteByIds(ids);
-
+        // 修改回单一删除
+        //删除菜品表中的菜品数据
+        for (Long id : ids) {
+            dishMapper.deleteById(id);//后绪步骤实现
+            //删除菜品关联的口味数据
+            dishFlavorMapper.deleteByDishId(id);//后绪步骤实现
+        }
     }
 
     /**
@@ -176,19 +180,15 @@ public class DishServiceImpl implements DishService {
 
 
         // 先根据dish_id对其进行删除口味表内容再进行添加【进行重复利用
-
-        // 笨比办法，后续改回！
         //获取主键值[自带不需要进行主键返回]
-        Long dishId = dishDTO.getId();
-        Long[] dishIds = new Long[]{dishId};
-        dishFlavorMapper.deleteByIds(dishIds);
+        dishFlavorMapper.deleteByDishId(dishDTO.getId());
 
         //重新插入口味数据【新的【选的】没有主键id！！！
         List<DishFlavor> flavors = dishDTO.getFlavors();
         // 加个判断确认是否添加
         if (flavors != null && flavors.size() > 0) {
             flavors.forEach(dishFlavor -> {
-                dishFlavor.setDishId(dishId);
+                dishFlavor.setDishId(dishDTO.getId());
             });
             dishFlavorMapper.insertBatch(flavors);
         }
