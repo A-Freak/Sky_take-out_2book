@@ -3,6 +3,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
@@ -128,10 +129,68 @@ public class DishServiceImpl implements DishService {
 
         // 进行删除既要对菜单表dish进行【动态SQL
         // 同样要对dish_flavor进行删除
-        // 此处我将其修改为批量删除[自我修改]
+        // 此处我将其修改为批量删除[自我修改]笨比！！
+        // 【一般进行删除都可以，但是其他业务层中进行调用不会删除多个】
         dishMapper.deleteByIds(ids);
         dishFlavorMapper.deleteByIds(ids);
 
     }
 
+    /**
+     * 根据id查询菜品
+     *
+     * @param id
+     * @author: zjy
+     * @return: DishVO
+     **/
+    @Transactional
+    public DishVO getByIdWithFlavor(Long id) {
+        // 删除时编写的所谓的泛用SQL语句
+        Dish dish = dishMapper.getById(id);
+
+        // 新增对口味表的id查询【返回Entry
+        List<DishFlavor> dishFlavors = dishFlavorMapper.getByDishId(id);
+
+        DishVO dishVO = DishVO.builder()
+                .flavors(dishFlavors)
+                .build();
+        BeanUtils.copyProperties(dish, dishVO);
+        return dishVO;
+    }
+
+    /**
+     * 修改菜品
+     *
+     * @param dishDTO
+     * @author: zjy
+     * @return: void
+     **/
+    @Transactional
+    public void updateWithFlavor(DishDTO dishDTO) {
+        // 类似于save
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+
+        //向菜品表进行修改自带id
+        dishMapper.update(dish);
+
+
+        // 先根据dish_id对其进行删除口味表内容再进行添加【进行重复利用
+
+        // 笨比办法，后续改回！
+        //获取主键值[自带不需要进行主键返回]
+        Long dishId = dishDTO.getId();
+        Long[] dishIds = new Long[]{dishId};
+        dishFlavorMapper.deleteByIds(dishIds);
+
+        //重新插入口味数据【新的【选的】没有主键id！！！
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        // 加个判断确认是否添加
+        if (flavors != null && flavors.size() > 0) {
+            flavors.forEach(dishFlavor -> {
+                dishFlavor.setDishId(dishId);
+            });
+            dishFlavorMapper.insertBatch(flavors);
+        }
+    }
 }

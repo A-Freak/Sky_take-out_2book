@@ -50,7 +50,6 @@ public interface DishMapper {
     @Select("select count(*) from dish where id = #{id} and status = 1")
     Integer getById(Long id);
 */
-
     /**
      * 根据主键查询菜品【优点：因其具有更加好的泛用性】
      *
@@ -69,4 +68,13 @@ public interface DishMapper {
      * @return: void
      */
     void deleteByIds(Long[] ids);
+
+    /**
+     * 通过id修改菜品对象
+     * @author: zjy
+     * @param dish
+     * @return: void
+     **/
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }

@@ -13,10 +13,10 @@
 
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         /* 甚至进行别名的取,注意点where and、name进行模糊查询、
-           最重要的，表的属性前要加表不然有重复表属性时不会查询！*/
-        /*放回的属性要对应名字才会进行映射故要起别名*/
+        最重要的，表的属性前要加表不然有重复表属性时不会查询！*/
+        /*放回的属性要对应名字才会进行映射故要起别名【也可以是category_name】*/
         select dish.*,category.name as categoryName from dish left outer join category
-            on dish.category_id = category.id
+        on dish.category_id = category.id
         <where>
             <if test="categoryId != null">
                 dish.category_id = #{categoryId}
@@ -37,4 +37,19 @@
             #{id}
         </foreach>
     </delete>
+
+    <update id="update">
+        update dish
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="updateTime != null">update_Time = #{updateTime},</if>
+            <if test="updateUser != null">update_User = #{updateUser},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>
