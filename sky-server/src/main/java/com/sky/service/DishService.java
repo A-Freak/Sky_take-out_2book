@@ -22,4 +22,12 @@ public interface DishService {
      * @return: PageResult
      **/
     PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+/**
+ * 批量删除菜品
+ * @author: zjy
+ * @param ids
+ * @return: void
+ **/
+    void deleteBatch(Long[] ids);
 }

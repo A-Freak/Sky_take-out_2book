@@ -39,7 +39,12 @@ public class DishController {
         return Result.success();
     }
 
-
+/**
+ * 菜品分页查询
+ * @author: zjy
+ * @param dishPageQueryDTO
+ * @return: Result<PageResult>
+ **/
     @GetMapping("/page")
     @ApiOperation("菜品分页查询")
     public Result<PageResult> page(DishPageQueryDTO dishPageQueryDTO){
@@ -47,6 +52,22 @@ public class DishController {
         PageResult pageResult = dishService.pageQuery(dishPageQueryDTO);
         return Result.success(pageResult);
     }
+
+/**
+ * 批量删除菜品
+ * @author: zjy
+ * @param ids
+ * @return: Result
+ **/
+    @DeleteMapping()
+    @ApiOperation("菜品批量删除")
+    // 两种写法请求可为数组也可为集合[要进行映射]
+    public Result delete(Long[] ids){
+        log.info("菜品批量删除，参数为：{}", ids);
+        dishService.deleteBatch(ids);
+        return Result.success();
+    }
+
 
 
 

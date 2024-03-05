@@ -10,6 +10,7 @@
         values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser},
                 #{updateUser}, #{status})
     </insert>
+
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         /* 甚至进行别名的取,注意点where and、name进行模糊查询、
            最重要的，表的属性前要加表不然有重复表属性时不会查询！*/
@@ -29,4 +30,11 @@
         </where>
         order by create_time desc
     </select>
+
+    <delete id="deleteByIds">
+        delete from dish where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
