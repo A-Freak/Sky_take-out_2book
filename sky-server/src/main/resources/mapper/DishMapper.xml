@@ -15,6 +15,7 @@
         /* 甚至进行别名的取,注意点where and、name进行模糊查询、
         最重要的，表的属性前要加表不然有重复表属性时不会查询！*/
         /*放回的属性要对应名字才会进行映射故要起别名【也可以是category_name】*/
+        /*口味虽然VO【包含了3个表的内容！！！】中包含但是并没进行使用，故查询无所谓，有的话也无法进行封装*/
         select dish.*,category.name as categoryName from dish left outer join category
         on dish.category_id = category.id
         <where>
