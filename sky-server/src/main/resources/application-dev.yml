@@ -9,6 +9,6 @@ sky:
 
   alioss:
     endpoint: oss-cn-hangzhou.aliyuncs.com
-    access-key-id: LTAI5tDWFRKrD5eur5dMHZoG
-    access-key-secret: RHOpp3gA2jmdwbHx5WsVByXRzZrITn
+    access-key-id: 我是大傻逼
+    access-key-secret: 我是大傻逼
     bucket-name: tlias-2book
