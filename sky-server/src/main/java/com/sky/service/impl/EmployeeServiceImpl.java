@@ -183,7 +183,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeMapper.update(employee);
         } else {
             // 抛出异常
-            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
+            throw new PasswordErrorException(MessageConstant.PASSWORD_EDIT_FAILED);
         }
     }
 
