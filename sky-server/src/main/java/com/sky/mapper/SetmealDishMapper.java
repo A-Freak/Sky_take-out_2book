@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -31,4 +32,6 @@ public interface SetmealDishMapper {
     // 查询的批量对其动态SQL的foreach进行了补充
     List<Long> getSetmealIdsByDishIds(Long[] dishIds);
 
+    @Select("select setmeal_id from setmeal_dish where dish_id = #{dishId}")
+    Long getSetmealIdsByDishId(Long dishId);
 }

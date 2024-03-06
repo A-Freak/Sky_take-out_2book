@@ -50,4 +50,13 @@ public interface DishService {
      * @return: void
      **/
     void updateWithFlavor(DishDTO dishDTO);
+
+    /**
+     * 启用禁用菜品
+     * @author: zjy
+     * @param status
+     * @param id
+     * @return: void
+     **/
+    void startOrStop(Integer status, Long id);
 }

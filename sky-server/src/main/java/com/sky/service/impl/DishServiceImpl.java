@@ -11,10 +11,12 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.entity.Employee;
+import com.sky.entity.Setmeal;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -36,6 +38,8 @@ public class DishServiceImpl implements DishService {
     private DishFlavorMapper dishFlavorMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     /**
      * 新增菜品和对应的口味
@@ -195,5 +199,42 @@ public class DishServiceImpl implements DishService {
             });
             dishFlavorMapper.insertBatch(flavors);
         }
+    }
+
+    /**
+     * 启用禁用菜品
+     *
+     * @param status
+     * @param id
+     * @author: zjy
+     * @return: void
+     **/
+    @Transactional
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = Dish.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        dishMapper.update(dish);
+
+        // 如果菜品与套餐有关联，套餐中的一个菜品进行了停售，那么这个套餐也要进行停售
+        // 两个SQL，要开启事务
+        if (status == StatusConstant.DISABLE) {
+            // 此处同样是批量查询【需要进行笨笨的类型转换|也可新增一个单个查询
+            Long setmealId = setmealDishMapper.getSetmealIdsByDishId(id);
+            if (setmealId != null && setmealId > 0) {
+                //当前菜品被套餐关联了，需要禁用套餐【修改
+                Setmeal setmeal = Setmeal.builder()
+                        .id(setmealId)
+                        .status(status)
+                        .build();
+                setmealMapper.update(setmeal);
+            }
+
+
+        }
+
+
     }
 }
