@@ -131,13 +131,16 @@ public class DishServiceImpl implements DishService {
         // 同样要对dish_flavor进行删除
         // 此处我将其修改为批量删除[自我修改]笨比！！【对前端而言倒数无所谓】
         // 【一般进行删除都可以，但是其他业务层中进行调用不会删除多个】
-        // 修改回单一删除
+        // 修改回单一删除【不早说都可以进行保留两个
         //删除菜品表中的菜品数据
-        for (Long id : ids) {
+        dishMapper.deleteByIds(ids);
+        dishFlavorMapper.deleteByDishIds(ids);
+
+/*        for (Long id : ids) {
             dishMapper.deleteById(id);//后绪步骤实现
             //删除菜品关联的口味数据
             dishFlavorMapper.deleteByDishId(id);//后绪步骤实现
-        }
+        }*/
     }
 
     /**

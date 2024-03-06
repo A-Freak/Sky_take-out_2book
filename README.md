@@ -119,7 +119,7 @@ select * from dish where id = #{id},不要写成select count(*) from dish where 
 在写中间表SQL语句查询时，select setmeal_id from setmeal_dish where dish_id in (1,2,3,4)
 补全了["批量"]:批量删除，批量添加、**批量查询**、【批量查询将多个对应id对象改为相同的赋值属性】
 
-【自我修改】将单个for循环删除改为批量删除
+【自我修改】将单个for循环删除改为批量删除，笨比【对于前端来说无所谓
 
 
 #######修改菜品:
@@ -138,4 +138,10 @@ select * from dish where id = #{id},不要写成select count(*) from dish where 
 
 第一个dish就直接克隆即可
 第二个dish_flavor有些有有些没有，干脆直接删除在进行一次添加【刚好也能用到之前写的SQL语句
-类似于插入了但是主键为刚写的**回显是包含id**的，【被删除的老的包含新的不包含故还是需要进行遍历set】
+类似于插入，但是主键为刚写的**回显是包含id**的，【被删除的老的包含，但是新的不包含故还是需要进行遍历set】
+
+
+###### 3.5 先补全视频查看有无遗漏
+牛魔既有单个删除，也有批量删除【这就是不看视频的代价
+
+
