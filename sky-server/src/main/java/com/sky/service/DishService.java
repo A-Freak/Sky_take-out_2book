@@ -6,6 +6,8 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 
+import java.util.List;
+
 
 public interface DishService {
 
@@ -59,4 +61,12 @@ public interface DishService {
      * @return: void
      **/
     void startOrStop(Integer status, Long id);
+
+    /**
+     * 根据分类id查询菜品
+     * @author: zjy
+     * @param categoryId
+     * @return: List<Dish>
+     **/
+    List<Dish> list(Long categoryId);
 }

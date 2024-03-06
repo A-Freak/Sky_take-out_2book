@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.entity.SetmealDish;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -23,7 +24,7 @@ public interface SetmealDishMapper {
 
 
     /**
-     * 根据菜品id查询对应的套餐id
+     * 根据菜品id查询对应的套餐id【批量
      *
      * @param dishIds
      * @return
@@ -32,6 +33,21 @@ public interface SetmealDishMapper {
     // 查询的批量对其动态SQL的foreach进行了补充
     List<Long> getSetmealIdsByDishIds(Long[] dishIds);
 
+    /**
+     * 菜品id查询对应的套餐id
+     * @author: zjy
+     * @param dishId
+     * @return: Long
+     **/
     @Select("select setmeal_id from setmeal_dish where dish_id = #{dishId}")
     Long getSetmealIdsByDishId(Long dishId);
+
+
+    /**
+     * 批量插入数据
+     * @author: zjy
+     * @param setmealDishes
+     * @return: void
+     **/
+    void insertBatch(List<SetmealDish> setmealDishes);
 }

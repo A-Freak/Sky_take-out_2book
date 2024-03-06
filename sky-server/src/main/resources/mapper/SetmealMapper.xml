@@ -33,4 +33,12 @@
         </set>
         where id = #{id}
     </update>
+
+    <!--同样进行主键返回，返回属性名为 id 进行自动映射-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Setmeal(category_id, name, price, status, description, image, create_time, create_user,
+                            update_time, update_user)
+        values (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{createUser},
+                #{updateTime}, #{updateUser})
+    </insert>
 </mapper>

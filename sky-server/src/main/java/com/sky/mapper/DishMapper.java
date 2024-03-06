@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -90,4 +92,12 @@ public interface DishMapper {
      **/
     @AutoFill(value = OperationType.UPDATE)
     void update(Dish dish);
+
+    /**
+     * 根据分类id查询菜品[要对菜品状态进行判断，在售才可进行显示
+     * @author: zjy
+     * @param categoryId
+     * @return: List<Dish>
+     **/
+    List<Dish> list(Long categoryId);
 }

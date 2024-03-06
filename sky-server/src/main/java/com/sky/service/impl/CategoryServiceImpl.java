@@ -112,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     /**
-     * 根据类型查询分类
+     * 根据类型查询分类[新增套餐、菜品的右上角][控制"菜品分类、套餐分类"的查询]
      * @param type
      * @return
      */

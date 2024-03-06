@@ -4,6 +4,7 @@ import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
@@ -155,6 +156,21 @@ public class EmployeeController {
     public Result startOrStop(@RequestBody EmployeeDTO employeeDTO) {
         log.info("编辑的员工账号：{}", employeeDTO);
         employeeService.update(employeeDTO);
+        return Result.success();
+    }
+
+
+    /**
+     * 修改员工密码
+     * @author: zjy
+     * @param passwordEditDTO
+     * @return: Result
+     **/
+    @PutMapping("editPassword")
+    @ApiOperation("修改员工密码")
+    public Result startOrStop(@RequestBody PasswordEditDTO passwordEditDTO) {
+        log.info("修改员工密码：{}", passwordEditDTO);
+        employeeService.changepassword(passwordEditDTO);
         return Result.success();
     }
 

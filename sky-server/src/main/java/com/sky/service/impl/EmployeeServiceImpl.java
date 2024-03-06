@@ -9,6 +9,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
@@ -19,9 +20,8 @@ import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-
-import java.time.LocalDateTime;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -59,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        // 进行内部值判断比较的并非包装类故可用==，发生误报
+        // Java有对包装类的Integer包装类的-128到127有进行缓存，发生误报
         if (employee.getStatus() == StatusConstant.DISABLE) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
@@ -142,7 +142,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeMapper.getById(id);
         // 本人对其前端传输改为DTO格式避免一些泄露【缺点：一些信息无法修改】
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        BeanUtils.copyProperties(employee,employeeDTO);
+        BeanUtils.copyProperties(employee, employeeDTO);
         return employeeDTO;
     }
 
@@ -160,6 +160,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // 调用之前的广泛的SQL
         employeeMapper.update(employee);
+    }
+
+    /**
+     * 修改员工密码
+     *
+     * @param passwordEditDTO
+     * @author: zjy
+     * @return: void
+     **/
+    @Override
+    @Transactional
+    public void changepassword(PasswordEditDTO passwordEditDTO) {
+        // 对传入旧密码进行验证[也许还有旧密码，不等于新密码?
+        // 此处 id无法进行获取，因为只有当其为新增和修改时才大概率需要用到获取员工id
+        Long empId = BaseContext.getCurrentId();
+        Employee employee = employeeMapper.getById(empId);
+        // 数据库中存在密码是已加密过后的,进行比对
+        if (employee.getPassword().equals(DigestUtils.md5DigestAsHex(passwordEditDTO.getOldPassword().getBytes()))) {
+            // 同样要存储加密后的密码
+            employee.setPassword(DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes()));
+            employeeMapper.update(employee);
+        } else {
+            // 抛出异常
+            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
+        }
     }
 
 }
