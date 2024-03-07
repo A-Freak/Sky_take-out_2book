@@ -29,7 +29,7 @@
                 and dish.status = #{status}
             </if>
         </where>
-        order by create_time desc
+        order by dish.create_time desc
     </select>
 
     <delete id="deleteByIds">

@@ -9,10 +9,19 @@
     </select>
 
     <insert id="insertBatch">
-        insert into setmeal_dish (setmeal_id, dish_id, name, price, copies) VALUES 
+        insert into setmeal_dish (setmeal_id, dish_id, name, price, copies) VALUES
     <foreach collection="setmealDishes" item="sd" separator=",">
         /*同上进行内部的内容格式添加[些许类似多维数组]*/
         (#{sd.setmealId},#{sd.dishId},#{sd.name},#{sd.price},#{sd.copies})
     </foreach>
     </insert>
+
+    <delete id="deleteBySetmealIds">
+        delete from setmeal_dish where setmeal_id in
+        <foreach collection="setmealIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
 </mapper>

@@ -41,4 +41,31 @@
         values (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{createUser},
                 #{updateTime}, #{updateUser})
     </insert>
+
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        /*其连接多表后，最好所有的都要对其进行添加`表.`包括排序*/
+        select s.*,category.name as categoryName from setmeal s left outer join category
+        on s.category_id = category.id
+        <where>
+            <if test="name != null and name !=''">
+                s.name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and s.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and s.status = #{status}
+            </if>
+        </where>
+        order by s.create_time desc
+    </select>
+
+    <delete id="deleteByIds">
+        delete from setmeal where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
 </mapper>

@@ -50,4 +50,12 @@ public interface SetmealDishMapper {
      * @return: void
      **/
     void insertBatch(List<SetmealDish> setmealDishes);
+
+    /**
+     * 通过套餐id 对中间表进行删批量删除
+     * @author: zjy
+     * @param setmealIds
+     * @return: void
+     **/
+    void deleteBySetmealIds(Long[] setmealIds);
 }
