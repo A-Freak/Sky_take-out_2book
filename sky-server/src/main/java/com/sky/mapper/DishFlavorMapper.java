@@ -20,7 +20,7 @@ public interface DishFlavorMapper {
      * 删除口味数据
      *
      * @param
-     * @param id
+     * @param dishId
      * @author: zjy
      * @return: void
      **/
@@ -31,7 +31,7 @@ public interface DishFlavorMapper {
      * 批量删除口味数据
      *
      * @param
-     * @param ids
+     * @param dishId
      * @author: zjy
      * @return: void
      **/

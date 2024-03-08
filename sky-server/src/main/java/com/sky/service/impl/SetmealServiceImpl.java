@@ -129,17 +129,15 @@ public class SetmealServiceImpl implements SetmealService {
      * @author: zjy
      * @return: void
      **/
-    public void updateWithSetmealDish(SetmealDTO setmealDTO) {
+    public void updateWithSD(SetmealDTO setmealDTO) {
         // 既要修改套餐，也要通过套餐id修改中间表中对应的关系
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
         setmealMapper.update(setmeal);
-
-        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
-
         // 先删除
         setmealDishMapper.deleteBySetmealId(setmealDTO.getId());
 
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
         // 后插入【同新增一样进行设置套餐 id
         // 新增判断[有可能将原本的菜品进行删除
         if (setmealDishes != null && setmealDishes.size() > 0) {
@@ -159,16 +157,12 @@ public class SetmealServiceImpl implements SetmealService {
      * @return: void
      **/
     public void startOrStop(Integer status, Long id) {
-        Setmeal build = Setmeal.builder()
-                .status(status)
-                .id(id)
-                .build();
-
         // 禁用时，无需考虑直接停用。
         // 启用时需要先通过中间表查询，再通过菜品表查询，最后进行判断内部菜品均为启用才可启用
         if (status == StatusConstant.ENABLE) {
             List<Long> dishIds = setmealDishMapper.getDishIdBySetmealId(id);
             // 再通过菜品id 获取菜品表中数据，并对其进行判断状态
+            // [套餐下菜品不能为空，故百分之百还有对应关系]
             dishIds.forEach(dishId -> {
                 Dish dish = dishMapper.getById(dishId);
                 if (dish.getStatus() == StatusConstant.DISABLE) {
@@ -176,7 +170,10 @@ public class SetmealServiceImpl implements SetmealService {
                 }
             });
         }
-
+        Setmeal build = Setmeal.builder()
+                .status(status)
+                .id(id)
+                .build();
         // 均通过测试后进行修改
         setmealMapper.update(build);
     }

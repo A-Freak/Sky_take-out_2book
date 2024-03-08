@@ -47,7 +47,7 @@ public interface SetmealService {
      * @param setmealDTO
      * @return: void
      **/
-    void updateWithSetmealDish(SetmealDTO setmealDTO);
+    void updateWithSD(SetmealDTO setmealDTO);
 
     /**
      * 套餐的启售停售
