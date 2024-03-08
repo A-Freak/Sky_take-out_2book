@@ -35,27 +35,39 @@ public interface SetmealDishMapper {
 
     /**
      * 菜品id查询对应的套餐id
-     * @author: zjy
+     *
      * @param dishId
+     * @author: zjy
      * @return: Long
      **/
     @Select("select setmeal_id from setmeal_dish where dish_id = #{dishId}")
     Long getSetmealIdsByDishId(Long dishId);
 
-
     /**
      * 批量插入数据
-     * @author: zjy
+     *
      * @param setmealDishes
+     * @author: zjy
      * @return: void
      **/
     void insertBatch(List<SetmealDish> setmealDishes);
 
     /**
      * 通过套餐id 对中间表进行删批量删除
-     * @author: zjy
+     *
      * @param setmealIds
+     * @author: zjy
      * @return: void
      **/
     void deleteBySetmealIds(Long[] setmealIds);
+
+    /**
+     * 通过套餐id 查询套餐菜品表
+     *
+     * @param id
+     * @author: zjy
+     * @return: List<SetmealDish>
+     **/
+    @Select("select * from setmeal_dish where setmeal_id = #{setmealId}")
+    List<SetmealDish> getBySetmealId(Long setmealId);
 }

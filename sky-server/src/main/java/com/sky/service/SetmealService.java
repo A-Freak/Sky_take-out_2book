@@ -3,6 +3,7 @@ package com.sky.service;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
+import com.sky.vo.SetmealVO;
 import org.springframework.stereotype.Service;
 
 
@@ -39,4 +40,12 @@ public interface SetmealService {
      * @return: void
      **/
     void updateWithDish(SetmealDTO setmealDTO);
+
+    /**
+     * 根据id查询套餐【回显
+     * @author: zjy
+     * @param id
+     * @return: SetmealVO
+     **/
+    SetmealVO getById(Long id);
 }

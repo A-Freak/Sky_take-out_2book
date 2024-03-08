@@ -139,7 +139,7 @@ public class EmployeeController {
      **/
     @GetMapping("/{id}")
     @ApiOperation("根据id查询员工信息")
-    public Result<EmployeeDTO> startOrStop(@PathVariable Long id) {
+    public Result<EmployeeDTO> getById(@PathVariable Long id) {
         EmployeeDTO employeeDTO = employeeService.getById(id);
         return Result.success(employeeDTO);
     }
@@ -153,7 +153,7 @@ public class EmployeeController {
      **/
     @PutMapping()
     @ApiOperation("编辑员工信息")
-    public Result startOrStop(@RequestBody EmployeeDTO employeeDTO) {
+    public Result update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("编辑的员工账号：{}", employeeDTO);
         employeeService.update(employeeDTO);
         return Result.success();
@@ -166,9 +166,9 @@ public class EmployeeController {
      * @param passwordEditDTO
      * @return: Result
      **/
-    @PutMapping("editPassword")
+    @PutMapping("/editPassword")
     @ApiOperation("修改员工密码")
-    public Result startOrStop(@RequestBody PasswordEditDTO passwordEditDTO) {
+    public Result changepassword(@RequestBody PasswordEditDTO passwordEditDTO) {
         log.info("修改员工密码：{}", passwordEditDTO);
         employeeService.changepassword(passwordEditDTO);
         return Result.success();

@@ -6,6 +6,7 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
+import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,9 @@ public class SetmealController {
 
     /**
      * 新增套餐
-     * @author: zjy
+     *
      * @param setmealDTO
+     * @author: zjy
      * @return: Result
      **/
     @PostMapping
@@ -36,22 +38,24 @@ public class SetmealController {
 
     /**
      * 套餐分页查询
-     * @author: zjy
+     *
      * @param setmealPageQueryDTO
+     * @author: zjy
      * @return: Result<PageResult>
      **/
     @GetMapping("/page")
     @ApiOperation("套餐分页查询")
     public Result<PageResult> page(SetmealPageQueryDTO setmealPageQueryDTO) {
         log.info("套餐分页查询参数：{}", setmealPageQueryDTO);
-        PageResult pageResult=  setmealService.pageQuery(setmealPageQueryDTO);
+        PageResult pageResult = setmealService.pageQuery(setmealPageQueryDTO);
         return Result.success(pageResult);
     }
 
     /**
      * 批量删除套餐
-     * @author: zjy
+     *
      * @param ids
+     * @author: zjy
      * @return: Result
      **/
     @DeleteMapping()
@@ -63,9 +67,25 @@ public class SetmealController {
     }
 
     /**
-     * 修改套餐
+     * 根据id查询套餐【回显
      * @author: zjy
+     * @param id
+     * @return: Result<SetmealVO>
+     **/
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询套餐")
+    public Result<SetmealVO> getById(@PathVariable Long id) {
+        log.info("根据id：{} 查询套餐", id);
+        SetmealVO setmealVO = setmealService.getById(id);
+        return Result.success(setmealVO);
+    }
+
+
+    /**
+     * 修改套餐
+     *
      * @param setmealDTO
+     * @author: zjy
      * @return: Result
      **/
     @PutMapping()
@@ -75,8 +95,6 @@ public class SetmealController {
         setmealService.updateWithDish(setmealDTO);
         return Result.success();
     }
-
-
 
 
 }

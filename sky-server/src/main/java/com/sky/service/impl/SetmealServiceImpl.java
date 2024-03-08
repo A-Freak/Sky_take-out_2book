@@ -95,14 +95,34 @@ public class SetmealServiceImpl implements SetmealService {
 
         // 同删除菜品一样，需要删除其套餐菜品的连接表
         // 上对下,并非同菜品一样，有关联就无法删除
-        setmealDishMapper.deleteBySetmealIds(ids);
         setmealMapper.deleteByIds(ids);
+        setmealDishMapper.deleteBySetmealIds(ids);
+    }
+
+    /**
+     * 根据id查询套餐【回显
+     *
+     * @param id
+     * @author: zjy
+     * @return: SetmealVO
+     **/
+    public SetmealVO getById(Long id) {
+        Setmeal setmeal = setmealMapper.getById(id);
+
+        List<SetmealDish> list = setmealDishMapper.getBySetmealId(id);
+
+        // 进行合并
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(setmeal,setmealVO);
+        setmealVO.setSetmealDishes(list);
+        return setmealVO;
     }
 
     /**
      * 修改套餐
-     * @author: zjy
+     *
      * @param setmealDTO
+     * @author: zjy
      * @return: void
      **/
     public void updateWithDish(SetmealDTO setmealDTO) {
