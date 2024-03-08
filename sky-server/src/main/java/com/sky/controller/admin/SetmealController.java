@@ -1,6 +1,5 @@
 package com.sky.controller.admin;
 
-import com.sky.dto.DishDTO;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
@@ -80,7 +79,6 @@ public class SetmealController {
         return Result.success(setmealVO);
     }
 
-
     /**
      * 修改套餐
      *
@@ -92,9 +90,10 @@ public class SetmealController {
     @ApiOperation("修改套餐")
     public Result update(@RequestBody SetmealDTO setmealDTO) {
         log.info("修改套餐参数：{}", setmealDTO);
-        setmealService.updateWithDish(setmealDTO);
+        setmealService.updateWithSetmealDish(setmealDTO);
         return Result.success();
     }
+
 
 
 }

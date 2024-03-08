@@ -51,7 +51,7 @@ public class SetmealServiceImpl implements SetmealService {
         Long setmealId = setmeal.getId();
 
         List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
-        // 此处不应添加判断，因为其为必要项
+        // 此处不添加判断，因为其为必要项
         setmealDishes.forEach(setmealDish -> {
             setmealDish.setSetmealId(setmealId);
         });
@@ -113,7 +113,7 @@ public class SetmealServiceImpl implements SetmealService {
 
         // 进行合并
         SetmealVO setmealVO = new SetmealVO();
-        BeanUtils.copyProperties(setmeal,setmealVO);
+        BeanUtils.copyProperties(setmeal, setmealVO);
         setmealVO.setSetmealDishes(list);
         return setmealVO;
     }
@@ -125,10 +125,27 @@ public class SetmealServiceImpl implements SetmealService {
      * @author: zjy
      * @return: void
      **/
-    public void updateWithDish(SetmealDTO setmealDTO) {
+    public void updateWithSetmealDish(SetmealDTO setmealDTO) {
         // 既要修改套餐，也要通过套餐id修改中间表中对应的关系
-        // TODO 今天就到这里
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+        setmealMapper.update(setmeal);
+
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+
+        // 先删除
+        setmealDishMapper.deleteBySetmealId(setmealDTO.getId());
+
+        // 后插入【同新增一样进行设置套餐 id
+        // 新增判断[有可能将原本的菜品进行删除
+        if (setmealDishes != null && setmealDishes.size() > 0) {
+            setmealDishes.forEach(setmealDish -> {
+                setmealDish.setSetmealId(setmealDTO.getId());
+            });
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
     }
+
 
 
 }
