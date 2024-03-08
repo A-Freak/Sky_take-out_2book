@@ -80,4 +80,16 @@ public interface SetmealDishMapper {
      **/
     @Select("select * from setmeal_dish where setmeal_id = #{setmealId}")
     List<SetmealDish> getBySetmealId(Long setmealId);
+
+
+    /**
+     * 根据套餐id查询对应的菜品id【单个】[套餐禁用中间表查询
+     * @author: zjy
+     * @param SetmealId
+     * @return: List<Long>
+     **/
+    //select dish_id from setmeal_dish where setmeal_id = ?
+    // 查询的批量对其动态SQL的foreach进行了补充
+    @Select("select  dish_id from setmeal_dish where  setmeal_id = #{setmealId}")
+    List<Long> getDishIdBySetmealId(Long setmealId);
 }

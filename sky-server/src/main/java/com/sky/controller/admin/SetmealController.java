@@ -8,6 +8,7 @@ import com.sky.service.SetmealService;
 import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +68,9 @@ public class SetmealController {
 
     /**
      * 根据id查询套餐【回显
-     * @author: zjy
+     *
      * @param id
+     * @author: zjy
      * @return: Result<SetmealVO>
      **/
     @GetMapping("/{id}")
@@ -94,6 +96,21 @@ public class SetmealController {
         return Result.success();
     }
 
+    /**
+     * 套餐的启售停售
+     *
+     * @param status
+     * @param id
+     * @author: zjy
+     * @return: Result
+     **/
+    @PostMapping("/status/{status}")
+    @ApiOperation("套餐的启售停售")
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        log.info("套餐的启售停售：{} ,id：{}", status, id);
+        setmealService.startOrStop(status, id);
+        return Result.success();
+    }
 
 
 }
