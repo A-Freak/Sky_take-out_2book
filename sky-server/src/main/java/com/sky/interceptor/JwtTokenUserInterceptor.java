@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,25 +19,17 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 @Slf4j
-public class JwtTokenAdminInterceptor implements HandlerInterceptor {
+public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
 
     /**
-     * 校验jwt[管理端]
+     * 校验jwt[用户端]
      *
-     * @param request
-     * @param response
-     * @param handler
-     * @return
-     * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("管理端进行拦截器");
-
-        // 测试线程
-        //System.out.println( "当前线程的id："+Thread.currentThread().getId());
+        log.info("用户端进行拦截器");
 
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
@@ -45,17 +38,16 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         }
 
         //1、从请求头中获取令牌
-        String token = request.getHeader(jwtProperties.getAdminTokenName());
+        String token = request.getHeader(jwtProperties.getUserTokenName());
 
         //2、校验令牌
         try {
             log.info("jwt校验:{}", token);
-            Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            // 大概率是JWT令牌中包含员工信息【生成时】，通过反向解析进行获取员工id,内部居然是双列集合
-            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
+            Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
             // 同线程存储值
-            BaseContext.setCurrentId(empId);
-            log.info("当前员工id：{}",empId);
+            BaseContext.setCurrentId(userId);
+            log.info("当前用户id：{}",userId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {

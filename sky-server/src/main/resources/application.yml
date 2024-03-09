@@ -47,6 +47,12 @@ sky:
     # 设置前端传递过来的令牌名称
     admin-token-name: token
 
+    # 用户端
+    user-secret-key: ${sky.jwt.user-secret-key}
+    user-ttl: ${sky.jwt.user-ttl}
+    # 设置前端传递过来的令牌名称
+    user-token-name: authentication
+
   # 阿里云OOS
   alioss:
     endpoint: ${sky.alioss.endpoint}
@@ -54,3 +60,7 @@ sky:
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
 
+  #WeChat
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
