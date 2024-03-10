@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController("userShopController")
 @Slf4j
 @RequestMapping("/user/shop")
-@Api(tags = "用户端店铺相关接口")
+@Api(tags = "C端-店铺操作接口")
 public class ShopController {
 
     // 将常量进行存储

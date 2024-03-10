@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/user/user")
-@Api(tags = "用户端用户相关接口")
+@Api(tags = "C端-用户接口")
 public class UserController {
 
 
