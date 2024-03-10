@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -136,6 +137,7 @@ public class DishController {
      **/
     @PostMapping("/status/{status}")
     @ApiOperation("启用禁用菜品")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)// 当菜品停售时，套餐需要将缓存进行清理
     public Result startOrStop(@PathVariable Integer status, Long id) {
         log.info("启用禁用菜品：{},{}", status, id);
         dishService.startOrStop(status, id);
