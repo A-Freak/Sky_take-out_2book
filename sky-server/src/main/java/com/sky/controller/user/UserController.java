@@ -48,11 +48,11 @@ public class UserController {
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        // 此处将 员工id 信息进行了混入令牌
+        // 此处将 用户id 信息进行了混入令牌【需要修改获取Key以及时间
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(
-                jwtProperties.getAdminSecretKey(),
-                jwtProperties.getAdminTtl(),
+                jwtProperties.getUserSecretKey(),
+                jwtProperties.getUserTtl(),
                 claims);
 
         UserLoginVO userLoginVO = UserLoginVO.builder()

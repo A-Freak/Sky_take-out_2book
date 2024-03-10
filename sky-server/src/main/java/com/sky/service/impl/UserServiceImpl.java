@@ -58,13 +58,10 @@ public class UserServiceImpl implements UserService {
                         .build();
                 userMapper.insert(user);
             }
-
-            //返回这个用户对象
-            return user;
         }
 
-
-        return null;
+        //返回这个用户对象
+        return user;
     }
 
 

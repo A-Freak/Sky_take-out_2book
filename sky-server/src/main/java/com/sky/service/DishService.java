@@ -47,26 +47,37 @@ public interface DishService {
 
     /**
      * 修改菜品
-     * @author: zjy
+     *
      * @param dishDTO
+     * @author: zjy
      * @return: void
      **/
     void updateWithFlavor(DishDTO dishDTO);
 
     /**
      * 启用禁用菜品
-     * @author: zjy
+     *
      * @param status
      * @param id
+     * @author: zjy
      * @return: void
      **/
     void startOrStop(Integer status, Long id);
 
     /**
      * 根据分类id查询菜品
-     * @author: zjy
+     *
      * @param categoryId
+     * @author: zjy
      * @return: List<Dish>
      **/
     List<Dish> list(Long categoryId);
+
+    /**
+     * 根据菜品【包含状态以及分类 id】查询菜品【包含菜品口味表】
+     * @param dish
+     * @author: zjy
+     * @return: List<DishVO>
+     **/
+    List<DishVO> listWithFlavor(Dish dish);
 }

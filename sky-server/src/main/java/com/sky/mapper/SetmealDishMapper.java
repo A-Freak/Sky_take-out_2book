@@ -83,7 +83,7 @@ public interface SetmealDishMapper {
 
 
     /**
-     * 根据套餐id查询对应的菜品id【单个】[套餐禁用中间表查询
+     * 根据【单个】套餐id查询对应的菜品id【可能多个】[套餐禁用中间表查询
      * @author: zjy
      * @param setmealId
      * @return: List<Long>
