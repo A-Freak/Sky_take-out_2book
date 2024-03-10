@@ -35,7 +35,7 @@ public interface DishFlavorMapper {
      * @author: zjy
      * @return: void
      **/
-    void deleteByDishIds(Long[] dishId);
+    void deleteByDishIds(Long[] dishIds);
 
     /**
      * 通过菜品id查询菜品口味表
