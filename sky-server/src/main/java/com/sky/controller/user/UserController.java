@@ -63,6 +63,14 @@ public class UserController {
 
         return Result.success(userLoginVO);
     }
+
+
+    @PostMapping("/logout")
+    @ApiOperation("用户微信退出")
+    public Result logout() {
+        return Result.success();
+    }
+
 }
 
 
