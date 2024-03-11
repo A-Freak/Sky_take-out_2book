@@ -11,6 +11,7 @@ import com.sky.service.ShoppingCartService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * @author: zjy
      * @return: void
      **/
+    @Transactional
     public void addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         // 补全剩下信息以及"冗余字段"，存入为单个金额故无需叠加【总金额放在前端自动进行】
         // 先判断已有对number进行修改
@@ -113,6 +115,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * @author: zjy
      * @return: void
      **/
+    @Transactional
     public void subShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         Long userId = BaseContext.getCurrentId();
         ShoppingCart shoppingCart = ShoppingCart.builder()
