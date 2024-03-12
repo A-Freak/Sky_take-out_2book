@@ -12,7 +12,7 @@ public interface OrderDetailMapper {
     /**
      * 批量插入订单明细数据
      * @author: zjy
-     * @param orderDetailList
+     * @param orderDetails
      * @return: void
      **/
     void insertBatch(List<OrderDetail> orderDetails);

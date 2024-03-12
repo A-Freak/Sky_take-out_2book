@@ -303,3 +303,34 @@ byd直接看完了
 
 ###### 用户下单：
 `对接口的设计要进行分析`
+
+真实的开发通常字段是非常多的， 
+要对其有用的字段进行插入即可，多余字段在后续会进行使用
+业务处理流程：
+0、对购物车以及地址簿**进行校验**【通过id进行查询，为空则抛出异常
+【此处要对字段进行清晰的认知**并结合实际**】
+
+1、对订单表进行插入一条【要分清能获取数据进行插入【**数据不全，可以插入，为空也能进行插入**】
+
+2 、为订单明细表插入n条【订单明细表类似于购物车表，其多了订单id
+
+3、清空购物车
+
+4、返回封装的vo视图对象【通过订单表中数据进行获取即可
+
+
+### 3.12 微信支付
+无法跟进实践的东西：需要相关证明
+相关操作等于，HttpClient的进阶
+使用此格式编写
+
+[开发指引-小程序支付 | 微信支付商户平台文档中心 (qq.com)](https://pay.weixin.qq.com/wiki/doc/apiv3/open/pay/chapter2_8_2.shtml)
+
+得到
+
+https://pay.weixin.qq.com/docs/merchant/apis/jsapi-payment/direct-jsons/jsapi-prepay.html
+https://pay.weixin.qq.com/docs/merchant/apis/mini-program-payment/mini-transfer-payment.html
+
+也就是后端请求微信进行预支付编码给小程序端
+小程序端口再调用微信API进行支付，微信进行回调提醒最终结果
+后端响应给微信API告知收到

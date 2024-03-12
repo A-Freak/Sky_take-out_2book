@@ -73,7 +73,7 @@ public class WeChatPayUtil {
     }
 
     /**
-     * 发送post方式请求
+     * 发送post方式请求[发送预支付订单
      *
      * @param url
      * @param body
@@ -123,7 +123,7 @@ public class WeChatPayUtil {
     }
 
     /**
-     * jsapi下单
+     * jsapi下单[生成预支付订单
      *
      * @param orderNum    商户订单号
      * @param total       总金额
@@ -132,6 +132,7 @@ public class WeChatPayUtil {
      * @return
      */
     private String jsapi(String orderNum, BigDecimal total, String description, String openid) throws Exception {
+        // 均为JSON格式大的包小的
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", weChatProperties.getAppid());
         jsonObject.put("mchid", weChatProperties.getMchid());
@@ -170,6 +171,7 @@ public class WeChatPayUtil {
         JSONObject jsonObject = JSON.parseObject(bodyAsString);
         System.out.println(jsonObject);
 
+        // JSAPI的返回预支付订单
         String prepayId = jsonObject.getString("prepay_id");
         if (prepayId != null) {
             String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
@@ -187,6 +189,7 @@ public class WeChatPayUtil {
             String signMessage = stringBuilder.toString();
             byte[] message = signMessage.getBytes();
 
+            // 选择签名格式设置签名，本地私钥
             Signature signature = Signature.getInstance("SHA256withRSA");
             signature.initSign(PemUtil.loadPrivateKey(new FileInputStream(new File(weChatProperties.getPrivateKeyFilePath()))));
             signature.update(message);
