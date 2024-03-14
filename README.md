@@ -391,14 +391,23 @@ TODO
 
 [轻量级路线规划 | 百度地图API SDK (baidu.com)](https://lbs.baidu.com/faq/api?title=webapi/guide/webservice-lwrouteplanapi/dirve)
 
-以上 api 的使用不同于微信支付般复杂，只需要传入对应词即可直接进行使用
+以上 api 的使用不同于微信支付般复杂，只需要传入对应值即可直接进行使用
 
 之后，对其返回**JSON文件进行解析**，即可得到相应数据
-【需要对JSON文件的解析进行补全【`根本没见过啥解析`】】
-
-
-
-
+【需要对JSON文件的解析进行补全知识【`除了半吊子的微信根本没见过啥解析`】】
 
 
 完毕以上订单模块进行修改下单支付
+
+参考
+[解决苍穹外卖支付问题-CSDN博客](https://blog.csdn.net/Keyboard_01/article/details/134736416?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-134736416-blog-134769838.235%5Ev43%5Epc_blog_bottom_relevance_base6&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-134736416-blog-134769838.235%5Ev43%5Epc_blog_bottom_relevance_base6&utm_relevant_index=1)
+
+[苍穹外卖——跳过微信支付-CSDN博客](https://blog.csdn.net/apple_51927114/article/details/134769838?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-134769838-blog-132677932.235%5Ev43%5Epc_blog_bottom_relevance_base6&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-134769838-blog-132677932.235%5Ev43%5Epc_blog_bottom_relevance_base6&utm_relevant_index=1)
+总而言之就是
+1、修改前端：无需进行程序的直接调用微信支付方法
+
+2、修改后端：`订单支付`时直接调用**回调运用的支付成功修改方法**
+
+3、除了订单支付接口有3个地方调用了微信支付，分别是：用户端取消订单、管理端取消订单，管理端拒绝订单【都注释即可】
+
+### 3.15 

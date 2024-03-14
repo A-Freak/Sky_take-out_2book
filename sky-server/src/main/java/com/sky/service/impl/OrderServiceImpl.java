@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
         // 根据订单号查询订单
         Orders ordersDB = orderMapper.getByNumber(outTradeNo);
 
-        // 根据订单id更新订单的状态、支付方式、支付状态、结账时间
+        // 根据订单id更新订单的状态[待接单]、支付方式[默认为1不用赋值]、支付状态[已支付]、结账时间
         Orders orders = Orders.builder()
                 .id(ordersDB.getId())
                 .status(Orders.TO_BE_CONFIRMED)
@@ -272,13 +272,14 @@ public class OrderServiceImpl implements OrderService {
 
         // 订单处于待接单状态下取消，需要进行退款[Integer类型小数字可以直接用==号进行比较
         if (status.equals(Orders.TO_BE_CONFIRMED)) {
+/*
             //调用微信支付退款接口
             weChatPayUtil.refund(
                     orders.getNumber(), //商户订单号
                     orders.getNumber(), //商户退款单号
                     new BigDecimal(0.01),//退款金额，单位 元
                     new BigDecimal(0.01));//原订单金额
-
+*/
             //支付状态修改为 退款【并不需要将订单状态修改为退款，购买后退款才是退款,并且已经将订单状态的7退款进行了删除】
             orders.setPayStatus(Orders.REFUND);
         }
@@ -410,15 +411,15 @@ public class OrderServiceImpl implements OrderService {
         // 如果用户完成支付，不用如果,100%为其退款
         // 标准参考中需要判断其支付状态[在我看来，其两个都能进行判断,支付完成后订单状态才能变为待接单状态
         if (orders.getPayStatus() == Orders.PAID) {
-
+/*
             String refund = weChatPayUtil.refund(
                     orders.getNumber(),
                     orders.getNumber(),
                     new BigDecimal(0.01),
                     new BigDecimal(0.01)
             );
-
             log.info("申请退款：{}", refund);
+*/
             // 此处难道不需要将支付状态进行修改吗？
             orders.setPayStatus(Orders.REFUND);
         }
@@ -449,15 +450,15 @@ public class OrderServiceImpl implements OrderService {
         //剩4个，1,3,4,5中1,5无需退款
         // 此处使用支付状态进行判断
         if (orders.getPayStatus() == Orders.PAID) {
-
+/*
             String refund = weChatPayUtil.refund(
                     orders.getNumber(),
                     orders.getNumber(),
                     new BigDecimal(0.01),
                     new BigDecimal(0.01)
             );
-
             log.info("申请退款：{}", refund);
+*/
             // 此处难道不需要将支付状态进行修改吗？
             orders.setPayStatus(Orders.REFUND);
         }

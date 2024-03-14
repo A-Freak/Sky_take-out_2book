@@ -43,7 +43,7 @@ public class OrderController {
 
 
     /**
-     * 订单支付
+     * 订单支付[修改
      *
      * @param ordersPaymentDTO
      * @author: zjy
@@ -53,9 +53,17 @@ public class OrderController {
     @ApiOperation("订单支付")
     public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
         log.info("订单支付：{}", ordersPaymentDTO);
+/*
+        // 无法使用，返回的值就是null，直接不使用
         OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
         log.info("生成预支付交易单：{}", orderPaymentVO);
-        return Result.success(orderPaymentVO);
+*/
+
+        // 修改为直接回调，修改订单
+        orderService.paySuccess(ordersPaymentDTO.getOrderNumber());
+        log.info("修改订单交易成功：{}", ordersPaymentDTO.getOrderNumber());
+
+        return Result.success(null);
     }
 
 
