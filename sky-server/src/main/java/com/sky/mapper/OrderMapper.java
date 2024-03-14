@@ -35,7 +35,7 @@ public interface OrderMapper {
     void update(Orders orders);
 
     /**
-     * 分页条件查询并按下单时间排序
+     * 分页条件查询并按下单时间排序[两用订单搜索
      *
      * @param ordersPageQueryDTO
      */
@@ -50,4 +50,12 @@ public interface OrderMapper {
      **/
     @Select("select * from orders where id = #{id}")
     Orders getById(Long id);
+
+
+    /**
+     * 根据状态统计订单数量[偷的节约性能
+     * @param status
+     */
+    @Select("select count(id) from orders where status = #{status}")
+    Integer countStatus(Integer status);
 }
