@@ -146,10 +146,10 @@ public class OrderServiceImpl implements OrderService {
 
         //调用微信支付接口，生成预支付交易单
         JSONObject jsonObject = weChatPayUtil.pay(
-                ordersPaymentDTO.getOrderNumber(), //商户订单号
-                new BigDecimal(0.01), //支付金额，单位 元
-                "苍穹外卖订单", //商品描述
-                user.getOpenid() //微信用户的openid
+            ordersPaymentDTO.getOrderNumber(), //商户订单号
+            new BigDecimal(0.01), //支付金额，单位 元
+            "苍穹外卖订单", //商品描述
+            user.getOpenid() //微信用户的openid
         );
 
         if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
@@ -280,7 +280,7 @@ public class OrderServiceImpl implements OrderService {
                     new BigDecimal(0.01),//退款金额，单位 元
                     new BigDecimal(0.01));//原订单金额
 */
-            //支付状态修改为 退款【并不需要将订单状态修改为退款，购买后退款才是退款,并且已经将订单状态的7退款进行了删除】
+            //支付状态修改为 退款【区别于管理端退款】
             orders.setPayStatus(Orders.REFUND);
         }
 
@@ -421,7 +421,7 @@ public class OrderServiceImpl implements OrderService {
             log.info("申请退款：{}", refund);
 */
             // 此处难道不需要将支付状态进行修改吗？
-            orders.setPayStatus(Orders.REFUND);
+            //orders.setPayStatus(Orders.REFUND);
         }
         // 状态修改
         // 添加拒绝原因到订单,以及相关拒绝字段，比如拒绝时间
@@ -460,7 +460,7 @@ public class OrderServiceImpl implements OrderService {
             log.info("申请退款：{}", refund);
 */
             // 此处难道不需要将支付状态进行修改吗？
-            orders.setPayStatus(Orders.REFUND);
+            //orders.setPayStatus(Orders.REFUND);
         }
 
         // 状态修改
@@ -584,8 +584,8 @@ public class OrderServiceImpl implements OrderService {
         // 进行解析JSON
         JSONObject result = jsonObject.getJSONObject("result");
         // 存在一个数组中【新解析，补全空白】
-        JSONArray jsonArray = (JSONArray) result.get("routes");
-        Integer distance = (Integer) ((JSONObject) jsonArray.get(0)).get("distance");
+        JSONArray jsonArray = result.getJSONArray("routes");
+        Integer distance = ((JSONObject) jsonArray.get(0)).getInteger("distance");
 
 
         // 判断距离
