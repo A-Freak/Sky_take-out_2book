@@ -527,6 +527,28 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * 催单
+     * @author: zjy
+     * @param id
+     * @return: void
+     **/
+    public void reminder(Long id) {
+        Orders orders = orderMapper.getById(id);
+
+        // 判断订单为空,只有待接单状态下，才能进行催单
+        if(orders == null || orders.getStatus() != Orders.TO_BE_CONFIRMED){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 将对应的封装 JSON 格式进行传递即可
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", 2);//消息类型，1表示来单提醒,2表示催单
+        jsonObject.put("orderId", orders.getId());
+        jsonObject.put("content", "订单号：" + orders.getNumber());
+        webSocketServer.sendToAllClient(jsonObject.toJSONString());
+    }
+
 
     static private String Get_location = "https://api.map.baidu.com/geocoding/v3";
 

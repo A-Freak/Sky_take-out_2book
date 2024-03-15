@@ -129,4 +129,13 @@ public interface OrderService {
      * @return: void
      **/
     void complete(Long id);
+
+
+    /**
+     * 催单
+     * @author: zjy
+     * @param id
+     * @return: void
+     **/
+    void reminder(Long id);
 }

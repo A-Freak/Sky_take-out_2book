@@ -67,19 +67,19 @@ public class OrderController {
     }
 
 
-
     /**
      * 分页查询历史订单
-     * @author: zjy
+     *
      * @param page
      * @param pageSize
      * @param status
+     * @author: zjy
      * @return: Result<PageResult>
      **/
     @GetMapping("/historyOrders")
     @ApiOperation("分页查询历史订单")
     public Result<PageResult> page(int page, int pageSize, Integer status) {
-        log.info("分页查询历史订单：{},{},{}", page,pageSize,status);
+        log.info("分页查询历史订单：{},{},{}", page, pageSize, status);
         PageResult pageResult = orderService.pageQuery4User(page, pageSize, status);
         return Result.success(pageResult);
     }
@@ -87,14 +87,15 @@ public class OrderController {
 
     /**
      * 查询订单详情
-     * @author: zjy
+     *
      * @param id
+     * @author: zjy
      * @return: Result<OrderVO>
      **/
     @GetMapping("/orderDetail/{id}")
     @ApiOperation("查询订单详情")
     public Result<OrderVO> details(@PathVariable Long id) {
-        log.info("查询详情订单id：{}",id );
+        log.info("查询详情订单id：{}", id);
         OrderVO orderVO = orderService.details(id);
         return Result.success(orderVO);
     }
@@ -102,14 +103,15 @@ public class OrderController {
 
     /**
      * 取消订单[困难在业务分析
-     * @author: zjy
+     *
      * @param id
+     * @author: zjy
      * @return: Result
      **/
     @PutMapping("/cancel/{id}")
     @ApiOperation("取消订单")
     public Result cancel(@PathVariable Long id) throws Exception {
-        log.info("取消订单id：{}",id );
+        log.info("取消订单id：{}", id);
         orderService.userCancelById(id);
         return Result.success();
     }
@@ -117,19 +119,34 @@ public class OrderController {
 
     /**
      * 再来一单
-     * @author: zjy
+     *
      * @param id
+     * @author: zjy
      * @return: Result
      **/
     @PostMapping("/repetition/{id}")
     @ApiOperation("再来一单")
     public Result repetition(@PathVariable Long id) throws Exception {
-        log.info("再来一单订单：{}",id );
+        log.info("再来一单订单：{}", id);
         orderService.repetition(id);
         return Result.success();
     }
 
 
+    /**
+     * 催单
+     *
+     * @param id
+     * @author: zjy
+     * @return: Result
+     **/
+    @GetMapping("/reminder/{id}")
+    @ApiOperation("催单")
+    public Result reminder(@PathVariable Long id) throws Exception {
+        log.info("催单：{}", id);
+        orderService.reminder(id);
+        return Result.success();
+    }
 
 
 }
