@@ -21,6 +21,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.util.EntityUtils;
 import org.apache.poi.poifs.filesystem.EntryUtils;
@@ -56,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
     private UserMapper userMapper;
     @Autowired
     private BaiduAPIProperies baiduAPIProperies;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -183,6 +186,17 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+        // 加入来单提醒
+        // 管理端已设置连接WebSocket，依赖已引入，服务端组件已导入，配置类注册完毕
+        // 此处只要进行发送封装JSON消息即可
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", 1);//消息类型，1表示来单提醒
+        jsonObject.put("orderId", orders.getId());
+        jsonObject.put("content", "订单号：" + outTradeNo);
+
+        webSocketServer.sendToAllClient(jsonObject.toJSONString());
+
     }
 
     /**
