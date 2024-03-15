@@ -22,9 +22,9 @@ public class OrderTask {
     private OrderMapper orderMapper;
 
     /**
-     * 处理支付超时订单[每分钟1次]
+     * 处理支付超时订单[每8分钟1次]
      */
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0/8 * * * ?")
     public void processTimeoutOrder() {
         log.info("处理支付超时订单：{}", new Date());
         // 非常标准的命名法
