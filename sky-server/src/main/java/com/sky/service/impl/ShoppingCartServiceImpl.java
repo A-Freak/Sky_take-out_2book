@@ -1,92 +1,82 @@
 package com.sky.service.impl;
 
-
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.ShoppingCart;
-import com.sky.mapper.*;
+import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealMapper;
+import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.ShoppingCartService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.beancontext.BeanContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
-    ShoppingCartMapper shoppingCartMapper;
+    private ShoppingCartMapper shoppingCartMapper;
     @Autowired
-    DishMapper dishMapper;
+    private DishMapper dishMapper;
     @Autowired
-    SetmealMapper setmealMapper;
+    private SetmealMapper setmealMapper;
 
     /**
      * 添加购物车
-     *
      * @param shoppingCartDTO
-     * @author: zjy
-     * @return: void
-     **/
-    @Transactional
+     */
     public void addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
-        // 补全剩下信息以及"冗余字段"，存入为单个金额故无需叠加【总金额放在前端自动进行】
-        // 先判断已有对number进行修改
+        //判断当前加入到购物车中的商品是否已经存在了
         ShoppingCart shoppingCart = new ShoppingCart();
-        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
-        // 一个用户对应一个购物车用userId查询
+        BeanUtils.copyProperties(shoppingCartDTO,shoppingCart);
         Long userId = BaseContext.getCurrentId();
         shoppingCart.setUserId(userId);
-        // 有可能多个吗？同一用户，同一菜品，同一口味还能有多个？[此处返回多个，是为了给其后的查询让路
-        List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
-        if (shoppingCartList != null && shoppingCartList.size() == 1) {
-            // 那此处list就需要获取第一个[进行覆盖
-            shoppingCart = shoppingCartList.get(0);
-            Integer numberOld = shoppingCart.getNumber();
-            shoppingCart.setNumber(numberOld + 1);
-            // 进行修改购物车
-            shoppingCartMapper.updateNumberById(shoppingCart);
-        } else {
-            // 对菜品还是套餐进行判断来获取 name、amount、image
-            if (shoppingCart.getDishId() == null) {
-                // 说明是套餐
-                Setmeal setmeal = setmealMapper.getById(shoppingCart.getSetmealId());
-                shoppingCart.setName(setmeal.getName());
-                shoppingCart.setAmount(setmeal.getPrice());
-                shoppingCart.setImage(setmeal.getImage());
-            } else {
-                // 所谓口味表是自带的
-                Dish dish = dishMapper.getById(shoppingCart.getDishId());
+
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+
+        //如果已经存在了，只需要将数量加一
+        if(list != null && list.size() > 0){
+            ShoppingCart cart = list.get(0);
+            cart.setNumber(cart.getNumber() + 1);//update shopping_cart set number = ? where id = ?
+            shoppingCartMapper.updateNumberById(cart);
+        }else {
+            //如果不存在，需要插入一条购物车数据
+            //判断本次添加到购物车的是菜品还是套餐
+            Long dishId = shoppingCartDTO.getDishId();
+            if(dishId != null){
+                //本次添加到购物车的是菜品
+                Dish dish = dishMapper.getById(dishId);
                 shoppingCart.setName(dish.getName());
-                shoppingCart.setAmount(dish.getPrice());
                 shoppingCart.setImage(dish.getImage());
+                shoppingCart.setAmount(dish.getPrice());
+            }else{
+                //本次添加到购物车的是套餐
+                Long setmealId = shoppingCartDTO.getSetmealId();
+                Setmeal setmeal = setmealMapper.getById(setmealId);
+                shoppingCart.setName(setmeal.getName());
+                shoppingCart.setImage(setmeal.getImage());
+                shoppingCart.setAmount(setmeal.getPrice());
             }
-            // 设置number为1
             shoppingCart.setNumber(1);
-
-            // 最后通用的createTime
-            LocalDateTime createTime = LocalDateTime.now();
-            shoppingCart.setCreateTime(createTime);
-
-            // 新增插入
+            shoppingCart.setCreateTime(LocalDateTime.now());
             shoppingCartMapper.insert(shoppingCart);
         }
     }
 
     /**
      * 查看购物车
-     *
-     * @param
-     * @author: zjy
-     * @return: List<ShoppingCart>
-     **/
+     * @return
+     */
     public List<ShoppingCart> showShoppingCart() {
-        // 直接通过 userId 进行查询即可
+        //获取到当前微信用户的id
         Long userId = BaseContext.getCurrentId();
         ShoppingCart shoppingCart = ShoppingCart.builder()
                 .userId(userId)
@@ -97,46 +87,37 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 清空购物车
-     *
-     * @param
-     * @author: zjy
-     * @return: void
-     **/
+     */
     public void cleanShoppingCart() {
-        // 直接获取userId 对其进行清理即可
+        //获取到当前微信用户的id
         Long userId = BaseContext.getCurrentId();
         shoppingCartMapper.deleteByUserId(userId);
     }
 
     /**
      * 删除购物车中一个商品
-     *
      * @param shoppingCartDTO
-     * @author: zjy
-     * @return: void
-     **/
-    @Transactional
+     */
     public void subShoppingCart(ShoppingCartDTO shoppingCartDTO) {
-        Long userId = BaseContext.getCurrentId();
-        ShoppingCart shoppingCart = ShoppingCart.builder()
-                .userId(userId)
-                .build();
-        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
-        // 先进行查询
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO,shoppingCart);
+        //设置查询条件，查询当前登录用户的购物车数据
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+
         List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
-        // 防止数据库出错
-        if (list != null && list.size() > 0) {
+
+        if(list != null && list.size() > 0){
             shoppingCart = list.get(0);
+
             Integer number = shoppingCart.getNumber();
-            // 后判断number大于一则进行修改-1，否则进行删除
-            if (number > 1) {
-                shoppingCart.setNumber(number - 1);
-                shoppingCartMapper.updateNumberById(shoppingCart);
-            } else {
+            if(number == 1){
+                //当前商品在购物车中的份数为1，直接删除当前记录
                 shoppingCartMapper.deleteById(shoppingCart.getId());
+            }else {
+                //当前商品在购物车中的份数不为1，修改份数即可
+                shoppingCart.setNumber(shoppingCart.getNumber() - 1);
+                shoppingCartMapper.updateNumberById(shoppingCart);
             }
         }
     }
-
-
 }

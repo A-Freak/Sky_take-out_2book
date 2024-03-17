@@ -25,12 +25,15 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
     private JwtProperties jwtProperties;
 
     /**
-     * 校验jwt[用户端]
+     * 校验jwt
      *
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("用户端进行拦截器");
-
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
@@ -45,9 +48,8 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
             Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
-            // 同线程存储值
+            log.info("当前用户的id：", userId);
             BaseContext.setCurrentId(userId);
-            log.info("当前用户id：{}",userId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {

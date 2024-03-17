@@ -81,13 +81,11 @@
             <artifactId>aspectjweaver</artifactId>
         </dependency>
 
-        <!--Swagger 接口文档依赖-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>
 
-        <!--配置Redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>

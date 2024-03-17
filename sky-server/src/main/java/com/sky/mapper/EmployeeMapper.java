@@ -9,13 +9,11 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import java.time.LocalDateTime;
-
 @Mapper
 public interface EmployeeMapper {
 
     /**
-     * 根据用户名查询员工[同时解决用户名唯一问题]
+     * 根据用户名查询员工
      * @param username
      * @return
      */
@@ -23,40 +21,34 @@ public interface EmployeeMapper {
     Employee getByUsername(String username);
 
     /**
-     * 新增员工
-     * @author: zjy
+     * 插入员工数据
      * @param employee
-     * @return: void
-     **/
-    // 别忘了驼峰映射
-    @Insert("insert into employee (name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user,status)" +
-            "values (#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
-    @AutoFill(OperationType.INSERT)
+     */
+    @Insert("insert into employee (name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user,status) " +
+            "values " +
+            "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
+    @AutoFill(value = OperationType.INSERT)
     void insert(Employee employee);
 
     /**
-     * 员工分页查询
-     * @author: zjy
+     * 分页查询
      * @param employeePageQueryDTO
-     * @return: Page<Employee>
-     **/
+     * @return
+     */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 
     /**
-     * 根据 id修改员工账号
-     * @author: zjy
+     * 根据主键动态修改属性
      * @param employee
-     * @return: void
-     **/
-    @AutoFill(OperationType.UPDATE)
+     */
+    @AutoFill(value = OperationType.UPDATE)
     void update(Employee employee);
 
     /**
      * 根据id查询员工信息
-     * @author: zjy
      * @param id
-     * @return: Employee
-     **/
+     * @return
+     */
     @Select("select * from employee where id = #{id}")
     Employee getById(Long id);
 }

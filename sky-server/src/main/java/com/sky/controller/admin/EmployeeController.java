@@ -4,7 +4,6 @@ import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
-import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
@@ -50,9 +49,7 @@ public class EmployeeController {
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        // 此处将 员工id 信息进行了混入令牌
         claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
-
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
@@ -74,7 +71,6 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/logout")
-    // 当其值只有一个时并且为value，可以不用写参数
     @ApiOperation("员工退出")
     public Result<String> logout() {
         return Result.success();
@@ -82,32 +78,25 @@ public class EmployeeController {
 
     /**
      * 新增员工
-     *
      * @param employeeDTO
-     * @author: zjy
-     * @return: Result
-     **/
+     * @return
+     */
+    @PostMapping
     @ApiOperation("新增员工")
-    @PostMapping()
-    public Result save(@RequestBody EmployeeDTO employeeDTO) {
-        // 测试线程
-        System.out.println("当前线程的id：" + Thread.currentThread().getId());
-
-        log.info("新增员工：{}", employeeDTO);
+    public Result save(@RequestBody EmployeeDTO employeeDTO){
+        log.info("新增员工：{}",employeeDTO);
         employeeService.save(employeeDTO);
         return Result.success();
     }
 
     /**
      * 员工分页查询
-     *
      * @param employeePageQueryDTO
-     * @author: zjy
-     * @return: Result<PageResult>
-     **/
+     * @return
+     */
     @GetMapping("/page")
     @ApiOperation("员工分页查询")
-    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO){
         log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
@@ -115,64 +104,40 @@ public class EmployeeController {
 
     /**
      * 启用禁用员工账号
-     *
      * @param status
      * @param id
-     * @author: zjy
-     * @return: Result
-     **/
-    // 此处并非查询语句，故不需要返回值泛型[没遵守REST风格]
+     * @return
+     */
     @PostMapping("/status/{status}")
     @ApiOperation("启用禁用员工账号")
-    public Result startOrStop(@PathVariable Integer status, Long id) {
-        log.info("启用禁用员工账号：{},{}", status, id);
-        employeeService.startOrStop(status, id);//后绪步骤定义
+    public Result startOrStop(@PathVariable Integer status,Long id){
+        log.info("启用禁用员工账号：{},{}",status,id);
+        employeeService.startOrStop(status,id);
         return Result.success();
     }
 
     /**
      * 根据id查询员工信息
-     *
      * @param id
-     * @author: zjy
-     * @return: Result<Employee>
-     **/
+     * @return
+     */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询员工信息")
-    public Result<EmployeeDTO> getById(@PathVariable Long id) {
-        EmployeeDTO employeeDTO = employeeService.getById(id);
-        return Result.success(employeeDTO);
+    public Result<Employee> getById(@PathVariable Long id){
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
     }
 
     /**
      * 编辑员工信息
-     *
      * @param employeeDTO
-     * @author: zjy
-     * @return: Result
-     **/
-    @PutMapping()
+     * @return
+     */
+    @PutMapping
     @ApiOperation("编辑员工信息")
-    public Result update(@RequestBody EmployeeDTO employeeDTO) {
-        log.info("编辑的员工账号：{}", employeeDTO);
+    public Result update(@RequestBody EmployeeDTO employeeDTO){
+        log.info("编辑员工信息：{}", employeeDTO);
         employeeService.update(employeeDTO);
         return Result.success();
     }
-
-
-    /**
-     * 修改员工密码
-     * @author: zjy
-     * @param passwordEditDTO
-     * @return: Result
-     **/
-    @PutMapping("/editPassword")
-    @ApiOperation("修改员工密码")
-    public Result changepassword(@RequestBody PasswordEditDTO passwordEditDTO) {
-        log.info("修改员工密码：{}", passwordEditDTO);
-        employeeService.changepassword(passwordEditDTO);
-        return Result.success();
-    }
-
-
 }

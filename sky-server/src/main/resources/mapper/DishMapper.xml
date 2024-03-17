@@ -3,7 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishMapper">
 
-    <!--此处的组键返回为XML格式，确实没用过之前是注解形式，给id这个属性返回主键的值-->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into dish (name, category_id, price, image, description, create_time, update_time, create_user,
                           update_user, status)
@@ -12,32 +11,20 @@
     </insert>
 
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
-        /* 甚至进行别名的取,注意点where and、name进行模糊查询、
-        最重要的，表的属性前要加表不然有重复表属性时不会查询！*/
-        /*放回的属性要对应名字才会进行映射故要起别名【也可以是category_name】*/
-        /*口味虽然VO【包含了3个表的内容！！！】中包含但是并没进行使用，故查询无所谓，有的话也无法进行封装*/
-        select dish.*,category.name as categoryName from dish left outer join category
-        on dish.category_id = category.id
+        select d.* , c.name as categoryName from dish d left outer join category c on d.category_id = c.id
         <where>
-            <if test="categoryId != null">
-                dish.category_id = #{categoryId}
-            </if>
             <if test="name != null">
-                and dish.name like concat('%',#{name},'%')
+                and d.name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and d.category_id = #{categoryId}
             </if>
             <if test="status != null">
-                and dish.status = #{status}
+                and d.status = #{status}
             </if>
         </where>
-        order by dish.create_time desc
+        order by d.create_time desc
     </select>
-
-    <delete id="deleteByIds">
-        delete from dish where id in
-        <foreach collection="ids" item="id" separator="," open="(" close=")">
-            #{id}
-        </foreach>
-    </delete>
 
     <update id="update">
         update dish
@@ -47,19 +34,38 @@
             <if test="price != null">price = #{price},</if>
             <if test="image != null">image = #{image},</if>
             <if test="description != null">description = #{description},</if>
-            <if test="updateTime != null">update_Time = #{updateTime},</if>
-            <if test="updateUser != null">update_User = #{updateUser},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
         </set>
         where id = #{id}
     </update>
 
-    <select id="list" resultType="com.sky.entity.Dish">
+    <select id="list" resultType="Dish" parameterType="Dish">
         select * from dish
-        where status = 1
-        <if test="categoryId != null">
-            and category_id = #{categoryId}
-        </if>
+        <where>
+            <if test="name != null">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
         order by create_time desc
+    </select>
+
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from dish
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
     </select>
 </mapper>

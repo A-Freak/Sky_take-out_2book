@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DishMapper {
@@ -36,26 +37,12 @@ public interface DishMapper {
      * 菜品分页查询
      *
      * @param dishPageQueryDTO
-     * @author: zjy
-     * @return: Page<DishVO>
-     **/
-    // 包含两个表故要进行表的连接：选用左外连接【包含前一个表的所有内容以及其交集部分】
-    // 其中菜品口味为空【但是前端未展示故无所谓】
+     * @return
+     */
     Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
 
     /**
-     * 判断菜品id是否起售[自我编写-废弃]
-     * @author: zjy
-     * @param id
-     * @return: Integer
-     **/
-/*
-    @Select("select count(*) from dish where id = #{id} and status = 1")
-    Integer getById(Long id);
-*/
-
-    /**
-     * 根据主键查询菜品【优点：因其具有更加好的泛用性】
+     * 根据主键查询菜品
      *
      * @param id
      * @return
@@ -64,40 +51,41 @@ public interface DishMapper {
     Dish getById(Long id);
 
     /**
-     * 删除菜品
+     * 根据主键删除菜品数据
      *
      * @param id
-     * @author: zjy
-     * @return: void
      */
     @Delete("delete from dish where id = #{id}")
     void deleteById(Long id);
 
     /**
-     * 批量删除菜品
-     *
-     * @param ids
-     * @author: zjy
-     * @return: void
-     */
-    void deleteByIds(Long[] ids);
-
-
-    /**
-     * 通过id修改菜品对象
+     * 根据id动态修改菜品数据
      *
      * @param dish
-     * @author: zjy
-     * @return: void
-     **/
+     */
     @AutoFill(value = OperationType.UPDATE)
     void update(Dish dish);
 
     /**
-     * 根据分类id查询菜品[要对菜品状态进行判断，在售才可进行显示
-     * @author: zjy
-     * @param categoryId
-     * @return: List<Dish>
-     **/
-    List<Dish> list(Long categoryId);
+     * 动态条件查询菜品
+     *
+     * @param dish
+     * @return
+     */
+    List<Dish> list(Dish dish);
+
+    /**
+     * 根据套餐id查询菜品
+     * @param setmealId
+     * @return
+     */
+    @Select("select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{setmealId}")
+    List<Dish> getBySetmealId(Long setmealId);
+
+    /**
+     * 根据条件统计菜品数量
+     * @param map
+     * @return
+     */
+    Integer countByMap(Map map);
 }

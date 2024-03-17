@@ -16,62 +16,43 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/user/user")
-@Api(tags = "C端-用户接口")
+@Api(tags = "C端用户相关接口")
+@Slf4j
 public class UserController {
-
 
     @Autowired
     private UserService userService;
     @Autowired
     private JwtProperties jwtProperties;
 
-
     /**
-     * 用户微信登录
-     *
+     * 微信登录
      * @param userLoginDTO
-     * @author: zjy
-     * @return: Result<UserLoginVO>
-     **/
+     * @return
+     */
     @PostMapping("/login")
-    @ApiOperation("用户微信登录")
-    public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        // 获取openid以及id逻辑
-        User user = userService.wxlogin(userLoginDTO);
+    @ApiOperation("微信登录")
+    public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO){
+        log.info("微信用户登录：{}",userLoginDTO.getCode());
 
-        //登录成功后，生成jwt令牌
+        //微信登录
+        User user = userService.wxLogin(userLoginDTO);
+
+        //为微信用户生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        // 此处将 用户id 信息进行了混入令牌【需要修改获取Key以及时间
-        claims.put(JwtClaimsConstant.USER_ID, user.getId());
-        String token = JwtUtil.createJWT(
-                jwtProperties.getUserSecretKey(),
-                jwtProperties.getUserTtl(),
-                claims);
+        claims.put(JwtClaimsConstant.USER_ID,user.getId());
+        String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
 
         UserLoginVO userLoginVO = UserLoginVO.builder()
-                .openid(user.getOpenid())
                 .id(user.getId())
+                .openid(user.getOpenid())
                 .token(token)
                 .build();
-
         return Result.success(userLoginVO);
     }
-
-
-    @PostMapping("/logout")
-    @ApiOperation("用户微信退出")
-    public Result logout() {
-        return Result.success();
-    }
-
 }
-
-
-

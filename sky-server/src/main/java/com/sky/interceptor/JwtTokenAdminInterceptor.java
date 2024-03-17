@@ -24,7 +24,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
     private JwtProperties jwtProperties;
 
     /**
-     * 校验jwt[管理端]
+     * 校验jwt
      *
      * @param request
      * @param response
@@ -33,11 +33,6 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("管理端进行拦截器");
-
-        // 测试线程
-        //System.out.println( "当前线程的id："+Thread.currentThread().getId());
-
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
@@ -51,11 +46,9 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            // 大概率是JWT令牌中包含员工信息【生成时】，通过反向解析进行获取员工id,内部居然是双列集合
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            // 同线程存储值
+            log.info("当前员工id：", empId);
             BaseContext.setCurrentId(empId);
-            log.info("当前员工id：{}",empId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {

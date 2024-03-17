@@ -8,7 +8,6 @@ import com.sky.vo.DishVO;
 
 import java.util.List;
 
-
 public interface DishService {
 
     /**
@@ -22,62 +21,52 @@ public interface DishService {
      * 菜品分页查询
      *
      * @param dishPageQueryDTO
-     * @author: zjy
-     * @return: PageResult
-     **/
+     * @return
+     */
     PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
 
     /**
-     * 批量删除菜品
+     * 菜品批量删除
      *
      * @param ids
-     * @author: zjy
-     * @return: void
-     **/
-    void deleteBatch(Long[] ids);
+     */
+    void deleteBatch(List<Long> ids);
 
     /**
-     * 根据id查询菜品
+     * 根据id查询菜品和对应的口味数据
      *
      * @param id
-     * @author: zjy
-     * @return: DishVO
-     **/
+     * @return
+     */
     DishVO getByIdWithFlavor(Long id);
 
     /**
-     * 修改菜品
+     * 根据id修改菜品基本信息和对应的口味信息
      *
      * @param dishDTO
-     * @author: zjy
-     * @return: void
-     **/
+     */
     void updateWithFlavor(DishDTO dishDTO);
 
     /**
-     * 启用禁用菜品
+     * 菜品起售停售
      *
      * @param status
      * @param id
-     * @author: zjy
-     * @return: void
-     **/
+     */
     void startOrStop(Integer status, Long id);
 
     /**
      * 根据分类id查询菜品
      *
      * @param categoryId
-     * @author: zjy
-     * @return: List<Dish>
-     **/
+     * @return
+     */
     List<Dish> list(Long categoryId);
 
     /**
-     * 根据菜品【包含状态以及分类 id】查询菜品【包含菜品口味表】
+     * 条件查询菜品和口味
      * @param dish
-     * @author: zjy
-     * @return: List<DishVO>
-     **/
+     * @return
+     */
     List<DishVO> listWithFlavor(Dish dish);
 }

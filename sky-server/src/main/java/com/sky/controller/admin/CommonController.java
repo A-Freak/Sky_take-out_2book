@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- *  通用接口
+ * 通用接口
  */
 @RestController
 @RequestMapping("/admin/common")

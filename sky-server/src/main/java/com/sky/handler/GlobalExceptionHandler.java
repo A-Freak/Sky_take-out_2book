@@ -17,7 +17,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class GlobalExceptionHandler {
 
     /**
-     * 捕获业务异常[自定义]
+     * 捕获业务异常
      * @param ex
      * @return
      */
@@ -28,13 +28,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 捕获未知[非自定义业务异常]的异常
-     * @author: zjy
+     * 处理SQL异常
      * @param ex
-     * @return: Result
-     **/
-    // 全局异常处理器的方法都是进行"重载"
-    // 其实还有一种方法，在新增员工时，进行一次用户名查询，找到的话就返回异常【将其加入业务异常】
+     * @return
+     */
     @ExceptionHandler
     public Result exceptionHandler(SQLIntegrityConstraintViolationException ex){
         //Duplicate entry 'zhangsan' for key 'employee.idx_username'
@@ -45,10 +42,7 @@ public class GlobalExceptionHandler {
             String msg = username + MessageConstant.ALREADY_EXISTS;
             return Result.error(msg);
         }else{
-            // 好处在于可以捕获其他的未知异常[弥补未知异常空缺]
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
     }
-
-
 }
