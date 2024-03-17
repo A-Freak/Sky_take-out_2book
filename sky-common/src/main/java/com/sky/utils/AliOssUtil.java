@@ -22,6 +22,7 @@ public class AliOssUtil {
     private String accessKeyId;
     private String accessKeySecret;
     private String bucketName;
+    private String folder;
 
     /**
      * 文件上传
@@ -32,6 +33,10 @@ public class AliOssUtil {
      */
     public String upload(byte[] bytes, String objectName) {
         // 没有使用uuid,文件覆盖问题交给使用方法前,objectName是文件名
+
+        // 想要传送到指定文件夹需要对上传文文件做操作[endpoint是唯一的不能更改
+        // 因为folder其还有一个/的后缀，此处用拼接,将其变得美观
+        objectName = folder + "/" + objectName;
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
@@ -57,7 +62,7 @@ public class AliOssUtil {
             }
         }
 
-        //文件访问路径规则 https://BucketName.Endpoint/ObjectName
+        //文件访问路径规则 https://BucketName.Endpoint/XXX文件名/ObjectName
         StringBuilder stringBuilder = new StringBuilder("https://");
         stringBuilder
                 .append(bucketName)

@@ -21,11 +21,12 @@ public class OssConfiguration {
     // 区别于独立模块,AliOssProperties是Bean对象【@Autowired 也行】
     // 不需要强制使用@EnableConfigurationProperties(AliOssProperties.class)
 
-    public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties){
-        log.info("开始创建阿里云文件上传工具类对象：{}",aliOssProperties);
+    public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties) {
+        log.info("开始创建阿里云文件上传工具类对象：{}", aliOssProperties);
         return new AliOssUtil(aliOssProperties.getEndpoint(),
                 aliOssProperties.getAccessKeyId(),
                 aliOssProperties.getAccessKeySecret(),
-                aliOssProperties.getBucketName());
+                aliOssProperties.getBucketName(),
+                aliOssProperties.getFolder());
     }
 }

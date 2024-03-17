@@ -39,7 +39,7 @@ public interface SetmealDishMapper {
      *
      * @param dishId
      * @author: zjy
-     * @return: Long
+     * @return: List<Long>
      **/
     @Select("select setmeal_id from setmeal_dish where dish_id = #{dishId}")
     List<Long> getSetmealIdsByDishId(Long dishId);
