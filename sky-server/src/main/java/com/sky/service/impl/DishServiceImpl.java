@@ -221,24 +221,28 @@ public class DishServiceImpl implements DishService {
 
         // 如果菜品与套餐有关联，套餐中的一个菜品进行了停售，那么这个套餐也要进行停售
         // 两个SQL，要开启事务
+        // 一个菜品跟多个套餐都有关联
         if (status == StatusConstant.DISABLE) {
             // 此处同样是批量查询【需要进行笨笨的类型转换|也可新增一个单个查询
-            Long setmealId = setmealDishMapper.getSetmealIdsByDishId(id);
-            if (setmealId != null && setmealId > 0) {
-                //当前菜品被套餐关联了，需要禁用套餐【修改
-                Setmeal setmeal = Setmeal.builder()
+            List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishId(id);
+            if (setmealIds != null && setmealIds.size() > 0) {
+                setmealIds.forEach(setmealId -> {
+                        //当前菜品被套餐关联了，需要禁用套餐【修改
+                        Setmeal setmeal = Setmeal.builder()
                         .id(setmealId)
                         .status(status)
                         .build();
                 setmealMapper.update(setmeal);
+                });
             }
         }
     }
 
     /**
      * 根据分类id查询菜品
-     * @author: zjy
+     *
      * @param categoryId
+     * @author: zjy
      * @return: List<Dish>
      **/
     public List<Dish> list(Long categoryId) {
@@ -248,6 +252,7 @@ public class DishServiceImpl implements DishService {
 
     /**
      * 条件查询菜品和口味[导入]
+     *
      * @param dish
      * @return
      */
@@ -261,7 +266,7 @@ public class DishServiceImpl implements DishService {
 
         for (Dish d : dishList) {
             DishVO dishVO = new DishVO();
-            BeanUtils.copyProperties(d,dishVO);
+            BeanUtils.copyProperties(d, dishVO);
 
             //根据菜品id查询对应的口味
             List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());

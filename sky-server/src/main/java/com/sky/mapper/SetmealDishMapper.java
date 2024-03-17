@@ -42,7 +42,7 @@ public interface SetmealDishMapper {
      * @return: Long
      **/
     @Select("select setmeal_id from setmeal_dish where dish_id = #{dishId}")
-    Long getSetmealIdsByDishId(Long dishId);
+    List<Long> getSetmealIdsByDishId(Long dishId);
 
     /**
      * 批量插入数据
